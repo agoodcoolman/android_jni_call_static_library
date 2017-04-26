@@ -1,0 +1,53 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 17
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "jin.com.ndkcamera"
+        minSdkVersion 16
+        targetSdkVersion 17
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            moduleName "seriport"
+        }
+        externalNativeBuild {
+            cmake {
+                // With android studio 2.2.0 +cmake, app needs to pack shared lib to
+                // into APK. Refer to CMakeLists.txt for details
+                //arguments //'-DANDROID_STL=c++_shared', '-DANDROID_TOOLCHAIN=clang',
+                arguments '-DANDROID_PLATFORM=android-17', '-DANDROID_ABI=armeabi'
+
+                cppFlags "-std=c++11 -frtti -fexceptions"
+                abiFilters 'armeabi'
+            }
+        }
+        sourceSets {
+            main {
+                jniLibs.srcDirs = ['src/main/jniLibs/']
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+//    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+//        exclude group: 'com.android.support', module: 'support-annotations'
+//    })
+//    compile 'com.android.support:appcompat-v7:25.1.1'
+//    testCompile 'junit:junit:4.12'
+}
